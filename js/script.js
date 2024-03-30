@@ -1,10 +1,11 @@
 "use strick"
 
 window.addEventListener("DOMContentLoaded",()=>{
+    //tabs start
     const tabs = document.querySelectorAll(".tabheader__items .tabheader__item");
     const tabContent = document.querySelectorAll(".tabcontainer .tabcontent");
     const tabsParent = document.querySelector(".tabheader__items");
-    let animate = false
+    let animate = false;
     
 
     function hideTabContent(){
@@ -17,7 +18,7 @@ window.addEventListener("DOMContentLoaded",()=>{
         })
     }
     function showTabContent(item = 0){
-    tabContent[item].classList.remove("hide")  
+     tabContent[item].classList.remove("hide")  
      tabContent[item].classList.add("show", `${animate ? "fade" : null}`)
      tabs[item].classList.add("tabheader__item_active")
     }
@@ -35,5 +36,61 @@ window.addEventListener("DOMContentLoaded",()=>{
             })
         }
     })
+// tabs end
+// timer start
+const dideline = "2024-05-21";
 
+function getTimeRemaining(endTime){
+    let dyas,hours,minutes,seconds
+    const total = Date.parse(endTime) - Date.parse(new Date());
+
+    if(total <= 0){
+        days = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+    }else{
+        days = Math.floor(total / (1000 * 60 * 60 * 24));
+        hours = Math.floor((total / 1000 * 60 * 60) % 24);
+        minutes = Math.floor((total / 1000 / 60) % 60);
+        seconds = Math.floor((total/ 1000) %60)
+    }
+    
+
+
+    return {total,days,hours,minutes,seconds}
+    
+}
+
+function setZero(n){
+    return n>=0 && n<10? `0${n}`:n
+}
+
+function setClock(selector,endTime){
+    const timer = document.querySelector(selector);
+    const daysElements = timer.querySelector("#days");
+    const hoursElements = timer.querySelector("#hours");
+    const minutsElements = timer.querySelector("#minutes");
+    const secondsElements = timer.querySelector("#seconds");
+    const IDinterval = setInterval(updateClock,1000)
+     updateClock() 
+    function updateClock(){
+
+        const {total,days,hours,minutes,seconds} = getTimeRemaining(endTime)
+
+        daysElements.innerHTML =setZero(days);
+        hoursElements.innerHTML =setZero(hours);
+        minutsElements.innerHTML =setZero(minutes);
+        secondsElements.innerHTML =setZero(seconds)
+
+    if(total.total <=0){
+        clearInterval(IDinterval)
+    }
+
+    }
+
+
+}
+setClock(".timer",dideline)
+// timer end
 })

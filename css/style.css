@@ -620,7 +620,7 @@ a {
 }
 
 @keyframes fade {
-  form {
+  from {
     opacity: 0.1;
   }
   to {
