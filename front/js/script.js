@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 const dideline = "2024-05-21";
 
 function getTimeRemaining(endTime){
-    let dyas,hours,minutes,seconds
+    let days,hours,minutes,seconds
     const total = Date.parse(endTime) - Date.parse(new Date());
 
     if(total <= 0){
@@ -143,4 +143,56 @@ function showModalByScroll(){
 }
 window.addEventListener("scroll",showModalByScroll)
 //modal end
+//Menu Card start
+class MenuCard  {
+    constructor(src,alt,title,descr,price,parent){
+        this.parent=document.querySelector(parent)
+        this.src = src;
+        this.alt = alt;
+        this.title = title;
+        this.descr = descr;
+        this.price = price;
+        this.change = 398.5;
+        this.changeToAmd()
+
+    }
+
+    changeToAmd(){
+        this.price=this.price * this.change;
+    }
+    render(){
+        const element = document.createElement("div");
+        const {src,alt,title,descr,price} = this
+        element.innerHTML += `
+        <div class="menu__item">
+        <img src=${src} alt=${alt} />
+        <h3 class="menu__item-subtitle">${title}</h3>
+        <div class="menu__item-descr">
+          ${descr}
+        </div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+          <div class="menu__item-cost">Цена:</div>
+          <div class="menu__item-total"><span>${price.toFixed(2)}</span> Amd/день</div>
+        </div>
+       </div>
+        `
+        this.parent.append(element);
+    }
+
+}
+
+new MenuCard("img/tabs/vegy.jpg","vegy",`Меню "Фитнес"`,` Меню "Фитнес" - это новый подход к приготовлению блюд: больше
+свежих овощей и фруктов. Продукт активных и здоровых людей. Это
+абсолютно новый продукт с оптимальной ценой и высоким качеством!`, 3 ,".menu__field .container").render()
+
+new MenuCard("img/tabs/elite.jpg","elite",`Меню “Премиум”`,` В меню “Премиум” мы используем не только красивый дизайн упаковки,
+но и качественное исполнение блюд. Красная рыба, морепродукты,
+фрукты - ресторанное меню без похода в ресторан!`,4,".menu__field .container").render()
+
+new MenuCard("img/tabs/post.jpg","post",`Меню "Постное"`,`Меню “Постное” - это тщательный подбор ингредиентов: полное
+отсутствие продуктов животного происхождения, молоко из миндаля,
+овса, кокоса или гречки, правильное количество белков за счет тофу
+и импортных вегетарианских стейков.`,5,".menu__field .container").render()
+//Menu Card End
 })
