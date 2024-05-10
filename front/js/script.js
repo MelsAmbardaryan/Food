@@ -195,4 +195,71 @@ new MenuCard("img/tabs/post.jpg","post",`Меню "Постное"`,`Меню �
 овса, кокоса или гречки, правильное количество белков за счет тофу
 и импортных вегетарианских стейков.`,5,".menu__field .container").render()
 //Menu Card End
+
+// forms start
+const forms = document.querySelectorAll("form")
+const status = document.querySelector(".status")
+forms.forEach(form => postData(form))
+
+const messages = {
+    loading:"Загрузка",
+    success:"Успех",
+    failure:"Отказ"
+
+}
+
+function postData(form){
+form.addEventListener("submit",(e)=>{
+    e.preventDefault()
+    const data = new FormData(e.target)
+    const request = new XMLHttpRequest()
+    request.open("POST","http://localhost:8888/data")
+    request.setRequestHeader("Content-type","application/json")
+    request.send(JSON.stringify(Object.fromEntries(data)))
+    status.textContent = messages.loading
+
+     request.addEventListener("load",()=>{
+        if(request.status === (200)){
+        status.textContent=messages.success
+        }else{
+        status.textContent =messages.failure
+        }
+     })
+     setTimeout(()=>{
+    e.target.reset();
+    status.textContent = ""
+     },1500)
+    
+})
+}
+const table = document.createElement("table");
+const thead = document.createElement("thead");
+const tbody = document.createElement("tbody");
+table.append(thead,tbody);
+document.body.append(table)
+
+thead.innerHTML +=`
+<tr>
+<th>Id</th>
+<th>Full Name</th>
+<th>Phone Number</th>
+</tr>
+`
+
+
+fetch("http://localhost:8888/users")
+.then(data=>data.json())
+.then((data)=>{
+    data.forEach(({id,name,phone})=>{
+        tbody.innerHTML+=`
+        <tr>
+        <td>${id}</td>
+        <td>${name}}</td>
+        <td>${phone}</td>
+        </tr>
+
+        `
+    })
+})
+.catch(err=>console.log(err))
 })
