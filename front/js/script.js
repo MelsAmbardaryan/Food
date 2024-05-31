@@ -182,18 +182,21 @@ class MenuCard  {
 
 }
 
-new MenuCard("img/tabs/vegy.jpg","vegy",`Меню "Фитнес"`,` Меню "Фитнес" - это новый подход к приготовлению блюд: больше
-свежих овощей и фруктов. Продукт активных и здоровых людей. Это
-абсолютно новый продукт с оптимальной ценой и высоким качеством!`, 3 ,".menu__field .container").render()
+fetch("http://localhost:8888/menu")
+.then(response=>response.json())
+.then(data=>data.forEach(item =>{
 
-new MenuCard("img/tabs/elite.jpg","elite",`Меню “Премиум”`,` В меню “Премиум” мы используем не только красивый дизайн упаковки,
-но и качественное исполнение блюд. Красная рыба, морепродукты,
-фрукты - ресторанное меню без похода в ресторан!`,4,".menu__field .container").render()
+ new MenuCard(
+`../back/uploads/${item.image}`,
+ `${item.title}`,
+ `${item.title}`,
+ `${item.description}`,
+ `${item.price}` ,
+  ".menu__field .container").render()
 
-new MenuCard("img/tabs/post.jpg","post",`Меню "Постное"`,`Меню “Постное” - это тщательный подбор ингредиентов: полное
-отсутствие продуктов животного происхождения, молоко из миндаля,
-овса, кокоса или гречки, правильное количество белков за счет тофу
-и импортных вегетарианских стейков.`,5,".menu__field .container").render()
+}))
+
+// new MenuCard("img/tabs/post.jpg","post",`Меню "Постное"`,``,5,".menu__field .container").render()
 //Menu Card End
 
 // forms start
@@ -211,25 +214,23 @@ const messages = {
 function postData(form){
 form.addEventListener("submit",(e)=>{
     e.preventDefault()
-    const data = new FormData(e.target)
-    const request = new XMLHttpRequest()
-    request.open("POST","http://localhost:8888/data")
-    request.setRequestHeader("Content-type","application/json")
-    request.send(JSON.stringify(Object.fromEntries(data)))
-    status.textContent = messages.loading
-
-     request.addEventListener("load",()=>{
-        if(request.status === (200)){
-        status.textContent=messages.success
-        }else{
+ const data = new FormData(e.target)
+ fetch('http://localhost:8888/data', {
+ method:"POST",
+ headers:{
+    "Content-Type":"application/json"
+ },
+ body:JSON.stringify(Object.fromEntries(data))
+ })
+ .then(res => {
+    if(!res.ok && res.status !== 200){
         status.textContent =messages.failure
-        }
-     })
-     setTimeout(()=>{
-    e.target.reset();
-    status.textContent = ""
-     },1500)
-    
+    }else{
+        status.textContent=messages.success
+    }
+ })
+ .catch(err=>console.log(`chatch Error ${err}`))
+ .finally(e.target.reset())  
 })
 }
 const table = document.createElement("table");
@@ -247,19 +248,21 @@ thead.innerHTML +=`
 `
 
 
-fetch("http://localhost:8888/users")
-.then(data=>data.json())
-.then((data)=>{
-    data.forEach(({id,name,phone})=>{
-        tbody.innerHTML+=`
-        <tr>
-        <td>${id}</td>
-        <td>${name}}</td>
-        <td>${phone}</td>
-        </tr>
+// fetch("http://localhost:8888/users")
+// .then(data=>data.json())
+// .then((data)=>{
+//     data.forEach(({id,name,phone})=>{
+//         tbody.innerHTML+=`
+//         <tr>
+//         <td>${id}</td>
+//         <td>${name}}</td>
+//         <td>${phone}</td>
+//         </tr>
 
-        `
-    })
-})
-.catch(err=>console.log(err))
+//         `
+//     })
+// })
+// .catch(err=>console.log(err))
+
+
 })
