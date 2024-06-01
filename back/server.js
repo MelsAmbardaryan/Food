@@ -1,5 +1,5 @@
 const express = require("express");
-const multer = require("multer")
+const multer = require("multer");
 const sqlite3 = require("sqlite3");
 const cors = require("cors");
 
@@ -11,20 +11,20 @@ app.use(express.static("static"));
 app.use(express.json());
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb){
-    cb(null,'uploads/')
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
   },
-  filename:function(req,file,cb){
-    cb(null,file.originalname)
-  }
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
 });
 
-const upload = multer({storage:storage});
+const upload = multer({ storage: storage });
 
-const DB = new sqlite3.Database("./dataBase.db");
+const DB = new sqlite3.Database("dataBase.db");
 
-app.post("/data", (req,res)=>{
-  const {name,phone}=req.body;
+app.post("/data", (req, res) => {
+  const { name, phone } = req.body;
   const insertQuery = "INSERT INTO users (name, phone) VALUES (?, ?);";
   DB.run(insertQuery, [name, phone], (err) => {
     if (err) {
@@ -33,12 +33,13 @@ app.post("/data", (req,res)=>{
       res.status(200).send("ALL IS OKAY IN DB");
     }
   });
-})
+});
 
-app.post("/upload", upload.single("image"),(req,res)=>{
+app.post("/upload", upload.single("image"), (req, res) => {
   const { title, description, price } = req.body;
   const image = req.file.originalname;
   const insertQuery = "INSERT INTO menu (title, description, price, image) VALUES (?, ?, ?, ?);";
+  
   DB.run(insertQuery, [title, description, price, image], (err) => {
     if (err) {
       console.log(req.body);
